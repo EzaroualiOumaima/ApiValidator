@@ -57,8 +57,20 @@ const userLogout = (req, res) => {
 };
 
 const editUser = async (req, res) => {
-  const currentUser = req.cookies;
-  console.log(currentUser);
+  const { access_token } = req.cookies;
+  const { _id } = jwt.decode(access_token);
+  const { userName } = req.body;
+  const user = await User.findOneAndUpdate(
+    { _id },
+    { userName },
+    { new: true }
+  );
+  res.json({ user, message: "user updated" });
 };
-
-module.exports = { registerUser, userLogin, userLogout, editUser };
+const deleteUser = async (req, res) => {
+  const { access_token } = req.cookies;
+  const { _id } = jwt.decode(access_token);
+  const user = await User.findOneAndDelete({ _id });
+  res.json({ message: "user deleted" });
+};
+module.exports = { registerUser, userLogin, userLogout, editUser, deleteUser };

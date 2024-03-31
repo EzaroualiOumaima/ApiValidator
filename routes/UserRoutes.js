@@ -14,6 +14,7 @@ userRouter.post("/register", userController.registerUser);
 
 userRouter.post("/login", userController.userLogin);
 userRouter.post("/editUser", userController.editUser);
+userRouter.delete("/deleteUser", userController.deleteUser);
 
 userRouter.get("/logout", VerifyUser, userController.userLogout);
 
