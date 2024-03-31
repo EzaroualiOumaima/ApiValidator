@@ -1,10 +1,14 @@
 const bcrypt = require("bcrypt");
-const User = require("../models/UserModel");
+const {User, userValidation} = require("../models/UserModel");
 const jwt = require("jsonwebtoken");
 const env = require("dotenv");
 
 const registerUser = async (req, res) => {
   try {
+    const {error} = userValidation.validate(req.body);
+    if(error){
+      return res.status(400).json({ message: error.details[0].message })
+    }
     const { userName, password } = req.body;
     const existingUser = await User.findOne({ userName });
 
@@ -30,6 +34,10 @@ const registerUser = async (req, res) => {
 
 const userLogin = async (req, res) => {
   try {
+    const {error} = userValidation.validate(req.body);
+    if(error){
+      return res.status(400).json({ message: error.details[0].message })
+    }
     const { userName, password } = req.body;
     const user = await User.findOne({ userName });
     if (!user) {
